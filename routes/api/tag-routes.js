@@ -28,6 +28,9 @@ router.post('/', (req, res) => {
   // create a new tag
   Tag.create(req.body).then(tagAdd => {
     res.json(tagAdd);
+  }).catch((err) => {
+    console.log(err);
+    res.status(400).json(err);
   });
 });
 

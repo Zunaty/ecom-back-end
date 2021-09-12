@@ -13,10 +13,7 @@ Tag.init(
       autoIncrement: true
     },
     tag_name: {
-      type: DataTypes.STRING,
-      validate: {
-        len: [1, 50]
-      }
+      type: DataTypes.STRING
     }
   },
   {
