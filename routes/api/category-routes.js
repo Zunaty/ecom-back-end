@@ -9,6 +9,9 @@ router.get('/', (req, res) => {
     include: Product
   }).then(cataData => {
     res.json(cataData);
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
   });
 });
 
@@ -19,9 +22,15 @@ router.get('/:id', (req, res) => {
     where: {
       id: req.params.id
     },
-    include: Product
+    include: [Product]
   }).then(oneCataData => {
+    if(!oneCataData) {
+      return res.status(404).json({message: 'No category with ID'});
+    }
     res.json(oneCataData);
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
   });
 });
 
@@ -31,7 +40,7 @@ router.post('/', (req, res) => {
     res.json(newCata);
   }).catch((err) => {
     console.log(err);
-    res.status(400).json(err);
+    res.status(500).json(err);
   });
 });
 
@@ -42,7 +51,13 @@ router.put('/:id', (req, res) => {
       id: req.params.id
     }
   }).then(updateCata => {
+    if(!updateCata) {
+      return res.status(404).json({message: 'No category with ID'});
+    }
     res.json(updateCata);
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
   });
 });
 
@@ -53,7 +68,13 @@ router.delete('/:id', (req, res) => {
       id: req.params.id
     }
   }).then(cataDelete => {
+    if(!cataDelete) {
+      return res.status(404).json({message: 'No category with ID'});
+    }
     res.json(cataDelete);
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
   });
 });
 

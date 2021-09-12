@@ -6,9 +6,12 @@ const { Tag, Product, ProductTag } = require('../../models');
 router.get('/', (req, res) => {
   // find all tags and its associated Product data
   Tag.findAll({
-    include: [Product, ProductTag]
+    include: Product
   }).then(tagData => {
     res.json(tagData);
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
   });
 });
 
@@ -18,10 +21,16 @@ router.get('/:id', (req, res) => {
      where: {
        id: req.params.id
      },
-     include: [Product, ProductTag]
+     include: [Product]
    }).then(oneTagData => {
+     if(!oneTagData) {
+       return res.status(404).json({message: 'No tag with ID'});
+     }
      res.json(oneTagData);
-   });
+   }).catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
+  });
 });
 
 router.post('/', (req, res) => {
@@ -30,7 +39,7 @@ router.post('/', (req, res) => {
     res.json(tagAdd);
   }).catch((err) => {
     console.log(err);
-    res.status(400).json(err);
+    res.status(500).json(err);
   });
 });
 
@@ -41,7 +50,13 @@ router.put('/:id', (req, res) => {
       id: req.params.id
     }
   }).then(tagUpdate => {
+    if(!tagUpdate){
+      return res.status(404).json({message: 'No tag with ID'});
+    }
     res.json(tagUpdate);
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
   });
 });
 
@@ -52,7 +67,13 @@ router.delete('/:id', (req, res) => {
       id: req.params.id
     }
   }).then(tagDelete => {
+    if(!tagDelete) {
+      return res.status(404).json({message: 'No tag with ID'});
+    }
     res.json(tagDelete);
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
   });
 });
 

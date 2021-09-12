@@ -7,9 +7,15 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 router.get('/', (req, res) => {
   // find all products and its associated Category and Tag data
   Product.findAll({
-    include: [Category, Tag]
+    include: [Category, {
+      model: Tag,
+      through: ProductTag
+    }]
   }).then(prodData => {
     res.json(prodData);
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
   });
 });
 
@@ -20,9 +26,18 @@ router.get('/:id', (req, res) => {
     where: {
       id: req.params.id
     },
-    include: [Category, Tag]
+    include: [Category, {
+      model: Tag,
+      through: ProductTag
+    }]
   }).then(oneProdData => {
+    if(!oneProdData) {
+      return res.status(404).json({message: 'No product with ID'});
+    }
     res.json(oneProdData);
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
   });
 });
 
@@ -107,7 +122,13 @@ router.delete('/:id', (req, res) => {
       id: req.params.id
     }
   }).then(prodDelete => {
+    if(!prodDelete) {
+      return res.status(404).json({message: 'No product with ID'});
+    }
     res.json(prodDelete);
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
   });
 });
 
